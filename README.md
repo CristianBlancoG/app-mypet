@@ -22,4 +22,9 @@
 npm install
 ionic build
 ionic cap sync
-ionic cap open android
+ionic cap open android #lleva el proyecto a android studio
+
+📱 Ejecución
+ionic serve        # Para navegador
+ionic cap run android  # Para dispositivo/emulador Android
+
