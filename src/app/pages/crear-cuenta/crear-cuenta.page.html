@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="clrPrincipal">
+    <ion-title>Nuevo Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+   <ion-item>
+    <ion-input [(ngModel)]="mdl_email" class="ion-padding-top" label="Correo Electrónico" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+    <ion-item>
+    <ion-input class="ion-padding-top" [(ngModel)]="mdl_pass" label="Contraseña" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input class="ion-padding-top" [(ngModel)]="mdl_name" label="Nombre" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input class="ion-padding-top" [(ngModel)]="mdl_lastname" label="Apellido" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input class="ion-padding-top" [(ngModel)]="mdl_id" label="Rut" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input class="ion-padding-top" [(ngModel)]="mdl_gen" label="Género" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input class="ion-padding-top" [(ngModel)]="mdl_dir" label="Dirección" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input class="ion-padding-top" label="Teléfono" labelPlacement="floating" ></ion-input>
+  </ion-item>
+
+  <ion-button (click)="crearCuenta()" class="clrPrincipal ion-padding-top" expand="block"> Crear Cuenta </ion-button>
+</ion-content>

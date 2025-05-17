@@ -1,0 +1,56 @@
+<!-- 1. Menú lateral (fuera de header/content) -->
+<ion-menu side="end" menuId="customMenu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar class="clrPrincipal">
+      <ion-title>Opciones</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item>Ajustes</ion-item>
+      <ion-item>Cerrar sesión</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-header [translucent]="true">
+  <ion-toolbar class="clrPrincipal">
+    <ion-title>Nombre de usuario</ion-title>
+
+    <ion-buttons slot="end">
+      <!-- Botón de cámara -->
+      <ion-button fill="clear" size="small">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+
+      <!-- Botón del menú -->
+      <ion-menu-button autoHide="false" menu="customMenu"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" id="main-content">
+  <ion-card class="card-mascota">
+    <ion-card-header>
+      <ion-card-title>Nombre Mascota</ion-card-title>
+      <ion-card-subtitle>Raza de Mascota</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      Datos de relevancia
+    </ion-card-content>
+
+    <!-- Botón: Perfil -->
+    <ion-button (click)="perfilMascota()" class="clrPrincipal boton-flotante perfil" size="small">
+      <ion-icon slot="start" name="paw-sharp"></ion-icon>
+      Perfil
+    </ion-button>
+
+    <!-- Botón: Vacunas -->
+    <ion-button (click)="histVacuna()" class="clrPrincipal boton-flotante vacunas" size="small">
+      <ion-icon slot="start" name="medkit"></ion-icon>
+      Vacunas
+    </ion-button>
+  </ion-card>
+</ion-content>
