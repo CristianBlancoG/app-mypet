@@ -1,12 +1,25 @@
-El Proyecto ya está migrado a nativo, se puede emular desde Android Studios para ver su ejecución
+# MyPet 🐾
 
-La version de AS es la ultima dispo en su pagina web
-El emulador utilizado es pixel 2XL con Api 31 (sistema operativo de android)
+**MyPet** es una aplicación móvil desarrollada con Ionic y Angular que permite registrar y gestionar información de mascotas. Ideal para dueños de mascotas, veterinarias o refugios.
 
+## 🚀 Características
 
-En services:
-Tine la función para creación de BDD local pero aun no crea tablas.
+- Registro de mascotas (pendiente)
+- Cámara para scannear trufa de perros (pendiente)
+- Base de datos local con SQLite (para el local storage)
+- Pronta conexión a servicios en la nube (APIs)
 
-*Flata el services para gestionar las apis 
+## 🛠 Tecnologías
 
-El front sigue sujeto a modificaciones ya que es solo un mpv
+- Ionic 8
+- Angular 19
+- Node.js 22
+- SQLite (cordova-sqlite-storage)
+
+## 📦 Instalación
+
+```bash
+npm install
+ionic build
+ionic cap sync
+ionic cap open android
