@@ -16,13 +16,19 @@
 - Node.js 22
 - SQLite (cordova-sqlite-storage)
 
+##🛠 Requisitos previos
+
+- Tener Ionic, Angular y Capacitor instalados
+- Tener Android Studio y SDKs configurados
+- Haber hecho: npm install en el proyecto
+
 ## 📦 Instalación
 
 ```bash
-npm install
-ionic build
-ionic cap sync
-ionic cap open android #lleva el proyecto a android studio
+npm install 
+ionic build    #Genera archivos en carpeta /www, la cual usará el Capacitor para la app nativa
+ionic cap sync    #Asegura que los plugins y configuraciones esté sincronizados con la plataforma android
+ionic cap open android    #abrirá la carpeta android/ como proyecto nativo en android studio
 
 📱 Ejecución
 ionic serve        # Para navegador
