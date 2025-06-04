@@ -1,13 +1,70 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="clrPrincipal">
-    <ion-title>Nombre Mascota</ion-title>
+    <ion-title>{{mascota?.nombre || 'Perfil de Mascota'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">pet-profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" id="main-content">
+  <div *ngIf="mascota">
+    <ion-card class="card-mascota" [class.fallecido]="mascota?.esta_muerta === 1">
+      <img [src]="mascota.foto_mascota_url || 'assets/default-pet.png'" alt="Foto de {{ mascota.nombre }}" />
+      
+      <ion-card-header>
+        <ion-card-title>
+          <ion-input *ngIf="isEditing" [(ngModel)]="mascota.nombre"></ion-input>
+          <span *ngIf="!isEditing">{{ mascota.nombre }}</span>
+        </ion-card-title>
+        <ion-card-subtitle>
+          <ion-input *ngIf="isEditing" [(ngModel)]="mascota.raza"></ion-input>
+          <span *ngIf="!isEditing">{{ mascota.raza }}</span>
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Color:</strong> 
+          <ion-input *ngIf="isEditing" [(ngModel)]="mascota.color"></ion-input>
+          <span *ngIf="!isEditing"> {{ mascota.color }}</span>
+        </p>
+        <p><strong>Edad:</strong> 
+          <ion-input *ngIf="isEditing" type="number" [(ngModel)]="mascota.edad"></ion-input>
+          <span *ngIf="!isEditing"> {{ mascota.edad }} años</span>
+        </p>
+        <p><strong>Peso:</strong> 
+          <ion-input *ngIf="isEditing" type="number" [(ngModel)]="mascota.peso"></ion-input>
+          <span *ngIf="!isEditing"> {{ mascota.peso }} kg</span>
+        </p>
+        <p><strong>Pelaje:</strong> 
+          <ion-input *ngIf="isEditing"  [(ngModel)]="mascota.tipo_pelaje"></ion-input>
+          <span *ngIf="!isEditing"> {{ mascota.tipo_pelaje }}</span>
+        </p>
+        <p><strong>Fecha de nacimiento:</strong> 
+          <ion-input *ngIf="isEditing"  [(ngModel)]="mascota.fecha_nacimiento"></ion-input>
+          <span *ngIf="!isEditing"> {{ mascota.fecha_nacimiento }}</span>
+        </p>
+        <p><strong>Fallecido:</strong> 
+          <ion-select *ngIf="isEditing" [(ngModel)]="mascota.esta_muerta" interface="popover">
+  <ion-select-option [value]="0">No</ion-select-option>
+  <ion-select-option [value]="1">Sí</ion-select-option>
+</ion-select>
+          <span *ngIf="!isEditing"> {{ mascota.esta_muerta === 1 ? 'Sí' : 'No' }}</span>
+        </p>
+      </ion-card-content>
+
+      <div class="button-container">
+        <ion-button (click)="toggleEdit()" class="clrPrincipal boton-flotante perfil" size="small">
+          <ion-icon slot="start" [name]="isEditing ? 'eye' : 'create'"></ion-icon>
+          {{ isEditing ? 'Ver' : 'Editar' }}
+        </ion-button>
+        
+        <ion-button *ngIf="isEditing" (click)="saveChanges()" class="clrPrincipal boton-flotante vacunas" size="small">
+          <ion-icon slot="start" name="save"></ion-icon>
+          Guardar
+        </ion-button>
+      </div>
+    </ion-card>
+  </div>
+
+<ion-button fill="clear" (click)="goBack()" class="back-button">
+  <ion-icon slot="icon-only" name="arrow-back-circle" size="large"></ion-icon>
+</ion-button>
 </ion-content>

@@ -1,0 +1,31 @@
+.card-mascota {
+  margin: 16px;
+  ion-card-header {
+    background: var(--ion-color-light);
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 16px 16px;
+  
+  ion-button {
+    margin: 0 8px;
+  }
+}
+
+.back-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+/* Estilo para inputs en modo edición */
+ion-input {
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 5px 10px !important;
+  margin-top: 5px;
+}

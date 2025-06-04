@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="clrPrincipal">
+    <ion-title>Nueva Mascota</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <ion-item>
+    <ion-input [(ngModel)]="mdl_nombre" label="Nombre" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input [(ngModel)]="mdl_raza" label="Raza" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input [(ngModel)]="mdl_peso" type="number" label="Peso" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input [(ngModel)]="mdl_color" label="Color" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input [(ngModel)]="mdl_pelaje" label="Tipo de Pelaje" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input [(ngModel)]="mdl_edad" label="Edad" type="number" labelPlacement="floating"></ion-input>
+  </ion-item>
+
+<ion-item>
+  <ion-label>Fecha de Nacimiento</ion-label>
+  <ion-input [value]="fechaNacimientoFormateada" readonly (click)="abrirCalendario()"></ion-input>
+</ion-item>
+
+<ion-modal #modalFecha>
+  <ng-template>
+    <ion-datetime 
+      presentation="date"
+      (ionChange)="onFechaSeleccionada($event)">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
+
+
+  <ion-item>
+    <ion-toggle [(ngModel)]="mdl_muerta">¿Mascota fallecida?</ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Foto de la Mascota</ion-label>
+    <input type="file" (change)="subirImagen($event)" accept="image/*">
+  </ion-item>
+
+  <ion-button expand="block" class="clrPrincipal" (click)="guardarMascota()">Guardar Mascota</ion-button>
+</ion-content>

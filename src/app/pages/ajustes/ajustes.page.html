@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="clrPrincipal">
+    <ion-title>Ajustes de Cuenta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" id="main-content">
+  <div *ngIf="usuario">
+    <ion-card class="card-mascota">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.nombre"></ion-input>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.apellido"></ion-input>
+          <span *ngIf="!isEditing"> {{ usuario.nombre }} {{ usuario.apellido }}</span>
+        </ion-card-title>
+        <ion-card-subtitle>
+          <span> {{ usuario.tipo_persona | titlecase }}</span>
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>RUT:</strong> 
+          <span> {{ usuario.rut }}</span>
+        </p>
+        <p><strong>Email:</strong> 
+          <ion-input *ngIf="isEditing" type="email" [(ngModel)]="usuario.email"></ion-input>
+          <span *ngIf="!isEditing"> {{ usuario.email }}</span>
+        </p>
+        <p><strong>Dirección:</strong> 
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.direccion"></ion-input>
+          <span *ngIf="!isEditing"> {{ usuario.direccion || 'No especificada' }}</span>
+        </p>
+        <p><strong>Teléfono:</strong> 
+          <ion-input *ngIf="isEditing" type="tel" [(ngModel)]="usuario.telefono"></ion-input>
+          <span *ngIf="!isEditing"> {{ usuario.telefono || 'No especificado' }}</span>
+        </p>
+        
+        <div *ngIf="isEditing">
+          <p><strong>Nueva Contraseña:</strong> 
+            <ion-input type="password" [(ngModel)]="nuevaContrasena" placeholder="Dejar en blanco para no cambiar"></ion-input>
+          </p>
+          <p><strong>Confirmar Contraseña:</strong> 
+            <ion-input type="password" [(ngModel)]="confirmarContrasena"></ion-input>
+          </p>
+        </div>
+
+            <ion-button  fill="clear" (click)="toggleEdit()">
+      <ion-icon slot="icon-only" [name]="isEditing ? 'eye' : 'create'" size="large"></ion-icon>
+        </ion-button>
+
+      </ion-card-content>
+
+
+      <div class="button-container">
+        <ion-button *ngIf="isEditing" (click)="cancelarEdicion()" class="clrPrincipal boton-flotante perfil" size="">
+          <ion-icon slot="start" name="close"></ion-icon>
+          Cancelar
+        </ion-button>
+        
+        <ion-button *ngIf="isEditing" (click)="guardarCambios()" class="clrPrincipal boton-flotante vacunas" size="small">
+          <ion-icon slot="start" name="save"></ion-icon>
+          Guardar
+        </ion-button>
+      </div>
+    </ion-card>
+
+    <ion-button fill="clear" (click)="goBack()" class="back-button">
+  <ion-icon slot="icon-only" name="arrow-back-circle" size="large"></ion-icon>
+</ion-button>
+  </div>
+
+</ion-content>

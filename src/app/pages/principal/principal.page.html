@@ -8,21 +8,20 @@
 
   <ion-content>
     <ion-list>
-      <ion-item>Ajustes</ion-item>
-      <ion-item>Cerrar sesión</ion-item>
+      <ion-item (click)="ajustes()">Ajustes</ion-item>
+      <ion-item (click)="anadir()">Añadir Mascota</ion-item>
+      <ion-item (click)="analizar()">Analizar Mascota</ion-item>
+      <ion-item (click)="cerrarSesion()">Cerrar sesión</ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
 
 <ion-header [translucent]="true">
   <ion-toolbar class="clrPrincipal">
-    <ion-title>Nombre de usuario</ion-title>
+    <ion-title> {{ usuario?.nombre || 'Pagina Principal'}} </ion-title>
 
     <ion-buttons slot="end">
-      <!-- Botón de cámara -->
-      <ion-button fill="clear" size="small">
-        <ion-icon slot="icon-only" name="camera"></ion-icon>
-      </ion-button>
+  
 
       <!-- Botón del menú -->
       <ion-menu-button autoHide="false" menu="customMenu"></ion-menu-button>
@@ -31,26 +30,35 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" id="main-content">
-  <ion-card class="card-mascota">
+  <ion-text color="danger">
+  <p *ngIf="errorMsg">{{ errorMsg }}</p>
+</ion-text>
+  <ion-card class="card-mascota" *ngFor="let mascota of mascotas">
+    <img [src]="mascota.foto_mascota_url" alt="Foto de{{ mascota.nombre }}" />
+
     <ion-card-header>
-      <ion-card-title>Nombre Mascota</ion-card-title>
-      <ion-card-subtitle>Raza de Mascota</ion-card-subtitle>
+      <ion-card-title>{{ mascota.nombre }}</ion-card-title>
+      <ion-card-subtitle>{{ mascota.raza }}</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
-      Datos de relevancia
+      <p><strong>Color:</strong> {{ mascota.color }}</p>
+      <p><strong>Edad:</strong> {{ mascota.edad }} años</p>
+      <p><strong>Peso:</strong> {{ mascota.peso }} kg</p>
     </ion-card-content>
 
     <!-- Botón: Perfil -->
-    <ion-button (click)="perfilMascota()" class="clrPrincipal boton-flotante perfil" size="small">
+    <ion-button (click)="perfilMascota(mascota)" class="clrPrincipal boton-flotante perfil" size="small">
       <ion-icon slot="start" name="paw-sharp"></ion-icon>
       Perfil
     </ion-button>
 
     <!-- Botón: Vacunas -->
-    <ion-button (click)="histVacuna()" class="clrPrincipal boton-flotante vacunas" size="small">
+    <ion-button (click)="histVacuna(mascota)" class="clrPrincipal boton-flotante vacunas" size="small">
       <ion-icon slot="start" name="medkit"></ion-icon>
       Vacunas
     </ion-button>
   </ion-card>
 </ion-content>
+
+

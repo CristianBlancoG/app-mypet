@@ -4,16 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { PrincipalPageRoutingModule } from './principal-routing.module';
+import { AnadirPageRoutingModule } from './anadir-routing.module';
 
-import { PrincipalPage } from './principal.page';
+import { AnadirPage } from './anadir.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PrincipalPageRoutingModule
-  ]
+    AnadirPageRoutingModule
+  ],
+  declarations: [AnadirPage]
 })
-export class PrincipalPageModule {}
+export class AnadirPageModule {}

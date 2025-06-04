@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DbService } from 'src/app/services/api/db.service';
 
 @Component({
   selector: 'app-login',
@@ -9,19 +10,31 @@ import { Router } from '@angular/router';
 })
 export class LoginPage implements OnInit {
 
-  mdl_email: string = '';
+  mdl_rut: string = '';
   mdl_pass: string = '';
 
-  constructor(private router: Router) { 
+  constructor(private router: Router,private api: DbService) { 
   }
 
   ngOnInit() {
   }
 
   //Función para navegar a la pantalla Principal
-  navegar() {
-    this.router.navigate(['principal']);
-  }
+ navegar() {
+  this.api.login(this.mdl_rut, this.mdl_pass).subscribe({
+    next: (user) => {
+      console.log('Usuario autenticado:', user);
+      // Guardar en localStorage
+      localStorage.setItem('usuario', JSON.stringify(user));
+      this.router.navigate(['principal']);
+    },
+    error: (err) => {
+      console.error('Error de login:', err);
+      alert('Rut o contraseña incorrectos.');
+    }
+  });
+}
+
 
   //Función para navegar a pantalla Crear Cuenta
   navegarCrearCuenta() {

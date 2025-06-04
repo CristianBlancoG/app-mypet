@@ -9,13 +9,19 @@
   <ion-img src="assets/ic-splash.svg" class="imagen-login"></ion-img>
 
   <ion-item>
-    <ion-input [(ngModel)]="mdl_email" label="Correo Electrónico" labelPlacement="floating" class="ion-padding-bottom"></ion-input>
+    <ion-input [(ngModel)]="mdl_rut" label="Rut" labelPlacement="floating" class="ion-padding-bottom"></ion-input>
   </ion-item>
 
     <ion-item>
     <ion-input [(ngModel)]="mdl_pass" type="password" label="Contraseña" labelPlacement="floating" class="ion-padding-bottom"></ion-input>
   </ion-item>
 
-  <ion-button class="clrPrincipal ion-padding-top" (click)="navegar()" expand="block"> Ingresar </ion-button>
+  <ion-button class="clrPrincipal ion-padding-top" 
+            (click)="navegar()" 
+            [disabled]="!mdl_rut || !mdl_pass"
+            expand="block"> 
+  Ingresar
+</ion-button>
+
   <ion-button class="ion-padding-top" (click)="navegarCrearCuenta()" fill="clear" expand="block">Crear Cuenta</ion-button>
 </ion-content>

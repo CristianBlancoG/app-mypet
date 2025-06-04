@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Buscar coincidencia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Comparar Huella</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <input type="file" accept="image/*" (change)="subirYComparar($event)">
+      
+      <ion-button expand="full" color="primary" (click)="enviarImagen()" [disabled]="!archivoSeleccionado">
+        Enviar para comparar
+      </ion-button>
+
+      <div *ngIf="resultado !== null">
+        <p><strong>Resultado de comparación:</strong> {{ resultado }}%</p>
+        <img *ngIf="imagenComparativa" [src]="imagenComparativa" style="width: 100%; margin-top: 10px;">
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

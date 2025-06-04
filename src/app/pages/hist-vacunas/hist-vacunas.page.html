@@ -1,8 +1,56 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="clrPrincipal">
-    <ion-title>Historial Vacunas</ion-title>
+    <ion-title>Historial Vacunas de {{ mascota?.nombre || 'tu mascota'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <!-- Mostrar mensaje si no hay vacunas -->
+  <ion-card *ngIf="historial?.length === 0">
+    <ion-card-content class="ion-text-center">
+      <h2>Aún no tiene vacunas asociadas</h2>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Lista de vacunas -->
+     <ion-text color="danger">
+  <p *ngIf="errorMsg">{{ errorMsg}}</p>
+</ion-text>
+  <ion-card *ngFor="let vacuna of historial">
+    <ion-card-header>
+      <ion-card-title>{{ vacuna.tipo_vacuna }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Aplicación:</strong> {{ vacuna.fecha_aplicacion }}</p>
+      <p><strong>Renovación:</strong> {{ vacuna.fecha_renovacion || 'N/A' }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Formulario para agregar vacuna -->
+  <div *ngIf="isEditing">
+    <ion-item>
+      <ion-input [(ngModel)]="mdl_tipo" label="Tipo de Vacuna" labelPlacement="floating"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="mdl_aplicacion" label="Fecha Aplicación" type="date" labelPlacement="floating"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="mdl_renovacion" label="Fecha Renovación (opcional)" type="date" labelPlacement="floating"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" class="clrPrincipal" (click)="agregarVacuna()">
+      Guardar Vacuna
+    </ion-button>
+  </div>
+
+  <!-- Botón para activar/desactivar formulario -->
+  <ion-button expand="block" fill="outline" (click)="toggleEdit()" class="ion-margin-top">
+    <ion-icon [name]="isEditing ? 'eye' : 'create'" slot="start"></ion-icon>
+    {{ isEditing ? 'Ver Historial' : 'Agregar Vacuna' }}
+  </ion-button>
+
+
 </ion-content>

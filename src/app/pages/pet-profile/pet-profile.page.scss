@@ -1,0 +1,11 @@
+.status-select {
+  max-width: 80px;
+  display: inline-block;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.fallecido {
+  color: var(--ion-color-danger);
+}
