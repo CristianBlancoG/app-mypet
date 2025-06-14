@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" id="main-content">
+<ion-content [fullscreen]="true" id="main-content" class="content">
   <div *ngIf="mascota">
     <ion-card class="card-mascota" [class.fallecido]="mascota?.esta_muerta === 1">
       <img [src]="mascota.foto_mascota_url || 'assets/default-pet.png'" alt="Foto de {{ mascota.nombre }}" />

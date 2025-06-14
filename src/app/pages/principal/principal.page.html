@@ -29,9 +29,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" id="main-content">
+<ion-content [fullscreen]="true" id="main-content" class="content">
   <ion-text color="danger">
-  <p *ngIf="errorMsg">{{ errorMsg }}</p>
+  <!--<p *ngIf="errorMsg">{{ errorMsg }}</p>-->
 </ion-text>
   <ion-card class="card-mascota" *ngFor="let mascota of mascotas">
     <img [src]="mascota.foto_mascota_url" alt="Foto de{{ mascota.nombre }}" />
