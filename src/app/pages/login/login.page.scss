@@ -1,19 +1,31 @@
-.content {
---background: #51ccf5;
---background: linear-gradient(360deg, rgba(81, 204, 245, 1) 0%, rgba(255, 255, 255, 1) 100%);
+.login-content {
+  position: relative;
+  --background: transparent;
 }
 
-.imagen-login {
-    margin-top: 50px;
-    width: 40%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 50px;
+.overlay {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.btn-login {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); //Sombra 
+  backdrop-filter: none;          //Asegura que no se aplique blur del card
+  background: #019dfb !important; //Refuerza color sólido por si hay herencia
+  opacity: 1 !important;  
 }
 
 
-
-/*.login-toolbar {
-    
-}*/
-
+.btn-crear {
+  color: #019dfb;
+  font-weight: 600;
+  opacity: 0.9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

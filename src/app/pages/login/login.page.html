@@ -1,52 +1,39 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="clrPrincipal">
+  <ion-toolbar class="toolbarColor">
     <ion-title>My Pet</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding" class="content">
+<ion-content [fullscreen]="true" class="login-content">
 
-<ion-img src="assets/ic-splash.svg" class="imagen-login"></ion-img>
+  <div class="bg-img"></div>
 
-  <ion-grid>
-    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%;">
-      <ion-col size="12">
+  <div class="overlay">
+    <ion-card class="card-translucent">
+      <ion-grid>
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="12" size-md="6" class="ion-text-center">
 
-        <ion-item>
-          <ion-input 
-            [(ngModel)]="mdl_rut" 
-            label="Rut" 
-            labelPlacement="floating">
-          </ion-input>
-        </ion-item>
+            <ion-item class="input-translucent">
+              <ion-input [(ngModel)]="mdl_rut" label="Rut" labelPlacement="floating"></ion-input>
+            </ion-item>
 
-        <ion-item>
-          <ion-input 
-            [(ngModel)]="mdl_pass" 
-            type="password" 
-            label="Contraseña" 
-            labelPlacement="floating">
-          </ion-input>
-        </ion-item>
+            <ion-item class="input-translucent">
+              <ion-input [(ngModel)]="mdl_pass" type="password" label="Contraseña" labelPlacement="floating"></ion-input>
+            </ion-item>
 
-        <ion-button 
-          class="clrPrincipal ion-margin-top" 
-          (click)="navegar()" 
-          [disabled]="!mdl_rut || !mdl_pass"
-          expand="block">
-          Ingresar
-        </ion-button>
+            <ion-button class="btn-login" (click)="navegar()" [disabled]="!mdl_rut || !mdl_pass" expand="block">
+              Ingresar
+            </ion-button>
 
-        <ion-button 
-          class="ion-margin-top" 
-          (click)="navegarCrearCuenta()" 
-          fill="clear" 
-          expand="block">
-          Crear Cuenta
-        </ion-button>
+            <ion-button class="btn-crear" (click)="navegarCrearCuenta()" fill="clear" expand="block">
+              Crear Cuenta
+            </ion-button>
 
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </div>
 
 </ion-content>

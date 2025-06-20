@@ -1,4 +1,23 @@
-.content {
---background: #51ccf5;
---background: linear-gradient(360deg, rgba(81, 204, 245, 1) 0%, rgba(255, 255, 255, 1) 100%);
+.page-content {
+    position: relative;
+    --background: transparent;
+}
+
+.overlay {
+  position: relative;
+  z-index: 1;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.card-translucido {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 500px;
 }
