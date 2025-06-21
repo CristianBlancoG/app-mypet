@@ -1,36 +1,90 @@
-.card-mascota {
-  margin: 16px;
+.content {
+  --background: linear-gradient(360deg, #ffffff 0%, #e7f6fb 100%);
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+
+.card-ajustes {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(4px);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin: 2.5rem auto 1.5rem auto; // margen superior para separar del toolbar
+  max-width: 500px;
+  color: #222;
+  width: 90%;
+
+    ion-input {
+    --padding-start: 10px;
+  }
+
   ion-card-header {
-    background: var(--ion-color-light);
+    padding-bottom: 0.5rem;
+  }
+
+  ion-card-title {
+    font-size: 1.3rem;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  ion-card-subtitle {
+    font-size: 0.95rem;
+    color: #666;
+  }
+
+  ion-card-content {
+    font-size: 0.95rem;
+
+    p {
+      margin: 0.5rem 0;
+    }
+
+    strong {
+      color: #333;
+    }
+
+    ion-input {
+      margin-top: 0.25rem;
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 10px;
+    }
   }
 }
 
 .button-container {
   display: flex;
-  justify-content: space-around;
-  padding: 0 16px 16px;
-  
+  justify-content: space-between;
+  padding: 0 1rem 1rem;
+
   ion-button {
-    margin: 0 8px;
+    flex: 1;
+    margin: 0 4px;
   }
 }
 
-.back-button {
+ion-button.back-button {
   position: fixed;
   bottom: 20px;
   left: 20px;
   z-index: 10;
+  --background: var(--ion-color-primary);
+  --color: white;
+  --box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
 }
 
-/* Estilo para inputs en modo edición */
-ion-input {
-  background: var(--ion-color-light);
-  border-radius: 8px;
-  padding: 5px 10px !important;
-  margin-top: 5px;
-}
 
-.content {
---background: #51ccf5;
---background: linear-gradient(360deg, rgba(81, 204, 245, 1) 0%, rgba(255, 255, 255, 1) 100%);
+.toggle-edit {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }

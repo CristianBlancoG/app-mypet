@@ -1,23 +1,29 @@
 .page-content {
-    position: relative;
-    --background: transparent;
+  position: relative;
+  --background: transparent;
 }
 
 .overlay {
   position: relative;
   z-index: 1;
-  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2rem 1rem;
   min-height: 100%;
 }
 
-.card-translucido {
-  background: rgba(255, 255, 255, 0.1);
+.btn-crear-cuenta {
   border-radius: 12px;
-  padding: 1rem;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  width: 100%;
-  max-width: 500px;
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
+
+
+

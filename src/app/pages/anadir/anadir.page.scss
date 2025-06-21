@@ -1,4 +1,123 @@
 .content {
---background: #51ccf5;
---background: linear-gradient(360deg, rgba(81, 204, 245, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  --background: linear-gradient(360deg, #ffffff 0%, #e7f6fb 100%);
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
 }
+
+.card-formulario {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  max-width: 600px;
+  margin: 2rem auto;
+
+  ion-card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 0;
+    margin-bottom: 12px;
+
+    ion-label {
+      color: #333;
+      font-weight: 500;
+    }
+
+    ion-input {
+      --padding-start: 12px;
+      --padding-end: 12px;
+      --border-radius: 8px;
+      --background: white;
+      color: #222;
+    }
+
+    ion-input::part(native) {
+      padding-left: 12px !important;
+    }
+
+    ion-toggle {
+      margin-left: 12px;
+    }
+
+    input[type="file"] {
+      margin-left: 12px;
+      margin-top: 8px;
+      padding: 6px;
+    }
+  }
+
+  .fecha-nacimiento-label {
+    margin-left: 12px;
+    margin-bottom: 4px;
+    display: block;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .fecha-nacimiento-input {
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-left: 12px;
+    margin-bottom: 12px;
+    width: calc(100% - 24px);
+    color: #222;
+    border: 1px solid #ccc;
+  }
+}
+
+.boton-guardar {
+  margin-top: 1rem;
+  border-radius: 16px;
+  font-weight: 500;
+  --box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.back-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  --background: var(--ion-color-primary);
+  --color: white;
+  --box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+::ng-deep .modal-fecha {
+  --background: transparent !important;
+  --height: auto;
+  --width: auto;
+
+  .modal-wrapper {
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    background: white;
+    padding: 1rem;
+    width: 90%;
+    max-width: 350px;
+    margin: auto;
+    top: 20% !important;
+    position: absolute;
+  }
+
+  ion-datetime {
+    background: white;
+    color: #222;
+    border-radius: 16px;
+    padding: 1rem;
+  }
+}
+
+

@@ -6,44 +6,53 @@
 
 <ion-content [fullscreen]="true" class="page-content">
   
+  <!-- Fondo con difuminado -->
   <div class="bg-img bg-default"></div>
 
-    <div class="overlay">
-      <ion-card class="card-translucido">
+  <div class="overlay">
+    <ion-card class="card-translucent">
 
-   <ion-item class="input-translucent">
-    <ion-input [(ngModel)]="mdl_email" class="ion-padding-top" label="Correo Electrónico" labelPlacement="floating"></ion-input>
-  </ion-item>
+      <!-- Campos del formulario -->
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_email" label="Correo Electrónico" labelPlacement="floating"></ion-input>
+      </ion-item>
 
-    <ion-item class="input-translucent">
-    <ion-input class="ion-padding-top" [(ngModel)]="mdl_pass" label="Contraseña" labelPlacement="floating"></ion-input>
-  </ion-item>
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_pass" type="password" label="Contraseña" labelPlacement="floating"></ion-input>
+      </ion-item>
 
-  <ion-item class="input-translucent">
-    <ion-input class="ion-padding-top" [(ngModel)]="mdl_name" label="Nombre" labelPlacement="floating"></ion-input>
-  </ion-item>
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_name" label="Nombre" labelPlacement="floating"></ion-input>
+      </ion-item>
 
-  <ion-item class="input-translucent">
-    <ion-input class="ion-padding-top" [(ngModel)]="mdl_lastname" label="Apellido" labelPlacement="floating"></ion-input>
-  </ion-item>
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_lastname" label="Apellido" labelPlacement="floating"></ion-input>
+      </ion-item>
 
-  <ion-item class="input-translucent">
-    <ion-input class="ion-padding-top" [(ngModel)]="mdl_id" label="Rut" labelPlacement="floating"></ion-input>
-  </ion-item>
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_id" label="Rut" labelPlacement="floating"></ion-input>
+      </ion-item>
 
-  <ion-item class="input-translucent">
-    <ion-input class="ion-padding-top" [(ngModel)]="mdl_gen" label="Género" labelPlacement="floating"></ion-input>
-  </ion-item>
+      <ion-item class="input-translucent">
+        <ion-select [(ngModel)]="mdl_gen" label="Género" labelPlacement="floating" interface="popover">
+          <ion-select-option value="Masculino">Masculino</ion-select-option>
+          <ion-select-option value="Femenino">Femenino</ion-select-option>
+          <ion-select-option value="Otro">Otro</ion-select-option>
+        </ion-select>
+      </ion-item>
 
-  <ion-item class="input-translucent">
-    <ion-input class="ion-padding-top" [(ngModel)]="mdl_dir" label="Dirección" labelPlacement="floating"></ion-input>
-  </ion-item>
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_dir" label="Dirección" labelPlacement="floating"></ion-input>
+      </ion-item>
 
-  <ion-item class="input-translucent">
-    <ion-input class="ion-padding-top" [(ngModel)]="mdl_phone" label="Teléfono" labelPlacement="floating" ></ion-input>
-  </ion-item>
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_phone" label="Teléfono" labelPlacement="floating"></ion-input>
+      </ion-item>
+      <ion-button expand="block" (click)="crearCuenta()" class="btn-crear-cuenta">
+      Crear Cuenta
+      </ion-button>
 
-  <ion-button (click)="crearCuenta()" class="clrPrincipal ion-padding-top" expand="block"> Crear Cuenta </ion-button>
-  </ion-card>
+
+    </ion-card>
   </div>
 </ion-content>

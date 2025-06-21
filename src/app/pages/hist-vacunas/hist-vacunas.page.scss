@@ -1,4 +1,70 @@
 .content {
---background: #51ccf5;
---background: linear-gradient(360deg, rgba(81, 204, 245, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  --background: linear-gradient(360deg, #ffffff 0%, #e7f6fb 100%);
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.card-vacuna {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.5rem;
+
+  ion-card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #222;
+  }
+
+  ion-card-content p {
+    font-size: 0.95rem;
+    margin: 0.3rem 0;
+    color: #333;
+
+    strong {
+      color: #111;
+    }
+  }
+}
+
+.formulario-vacuna {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  ion-item {
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+
+    ion-input {
+      padding-left: 12px;
+    }
+  }
+
+  ion-button {
+    margin-top: 1rem;
+  }
+}
+
+.toggle-form-btn {
+  margin-top: 1.5rem;
+}
+
+.back-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  --background: var(--ion-color-primary);
+  --color: white;
+  --box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
 }

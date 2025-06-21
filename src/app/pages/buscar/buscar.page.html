@@ -1,11 +1,11 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="clrPrincipal">
-    <ion-title>Buscar coincidencia</ion-title>
+  <ion-toolbar class="toolbarColor">
+    <ion-title>Buscar Coincidencia</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding content">
-
+   <div class="bg-img bg-default"></div>
   <ion-card class="card">
     <ion-card-header>
       <ion-card-title>Comparar Huella</ion-card-title>
@@ -19,7 +19,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-          <ion-button expand="full" color="primary" (click)="enviarImagen()" [disabled]="!archivoSeleccionado">
+          <ion-button expand="full" class="boton-comparar" (click)="enviarImagen()" [disabled]="!archivoSeleccionado">
             Enviar para comparar
           </ion-button>
           </ion-col>
@@ -32,5 +32,8 @@
       </div>
     </ion-card-content>
   </ion-card>
-
+ 
+  <ion-button class="back-button" shape="round">
+  <ion-icon slot="icon-only" name="arrow-back" size="large"></ion-icon>
+</ion-button>
 </ion-content>

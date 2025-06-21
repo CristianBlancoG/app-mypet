@@ -15,17 +15,29 @@
 
 .btn-login {
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); //Sombra 
-  backdrop-filter: none;          //Asegura que no se aplique blur del card
-  background: #019dfb !important; //Refuerza color sólido por si hay herencia
-  opacity: 1 !important;  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
 }
 
+ion-button.btn-login:disabled {
+  opacity: 0.8; 
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  filter: grayscale(0.1); 
+  cursor: not-allowed;
+}
 
 .btn-crear {
-  color: #019dfb;
+  color: var(--ion-color-primary);
   font-weight: 600;
   opacity: 0.9;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn-crear:hover {
+  opacity: 1;
+  transform: scale(1.02);
 }

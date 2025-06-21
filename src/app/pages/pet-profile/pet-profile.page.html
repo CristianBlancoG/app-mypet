@@ -1,12 +1,13 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="clrPrincipal">
+  <ion-toolbar class="toolbarColor">
     <ion-title>{{mascota?.nombre || 'Perfil de Mascota'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" id="main-content" class="content">
+  <div class="bg-img bg-default"></div>
   <div *ngIf="mascota">
-    <ion-card class="card-mascota" [class.fallecido]="mascota?.esta_muerta === 1">
+    <ion-card class="card-petprofile" [class.fallecido]="mascota?.esta_muerta === 1">
       <img [src]="mascota.foto_mascota_url || 'assets/default-pet.png'" alt="Foto de {{ mascota.nombre }}" />
       
       <ion-card-header>
@@ -64,7 +65,7 @@
     </ion-card>
   </div>
 
-<ion-button fill="clear" (click)="goBack()" class="back-button">
-  <ion-icon slot="icon-only" name="arrow-back-circle" size="large"></ion-icon>
+<ion-button shape="round" (click)="goBack()" class="back-button">
+  <ion-icon slot="icon-only" name="arrow-back" size="large"></ion-icon>
 </ion-button>
 </ion-content>

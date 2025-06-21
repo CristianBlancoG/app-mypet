@@ -1,7 +1,7 @@
-<!-- 1. Menú lateral (fuera de header/content) -->
+<!-- Menú lateral -->
 <ion-menu side="end" menuId="customMenu" contentId="main-content">
   <ion-header>
-    <ion-toolbar class="clrPrincipal">
+    <ion-toolbar color="primary">
       <ion-title>Opciones</ion-title>
     </ion-toolbar>
   </ion-header>
@@ -9,32 +9,28 @@
   <ion-content>
     <ion-list>
       <ion-item (click)="ajustes()">Ajustes</ion-item>
-      <ion-item (click)="anadir()">Añadir Mascota</ion-item>
-      <ion-item (click)="analizar()">Analizar Mascota</ion-item>
       <ion-item (click)="cerrarSesion()">Cerrar sesión</ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
 
+<!-- Header principal -->
 <ion-header [translucent]="true">
-  <ion-toolbar class="clrPrincipal">
-    <ion-title> {{ usuario?.nombre || 'Pagina Principal'}} </ion-title>
-
+  <ion-toolbar color="primary">
+    <ion-title>{{ usuario?.nombre || 'Página Principal' }}</ion-title>
     <ion-buttons slot="end">
-  
-
-      <!-- Botón del menú -->
       <ion-menu-button autoHide="false" menu="customMenu"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+<!-- Contenido principal -->
 <ion-content [fullscreen]="true" id="main-content" class="content">
-  <ion-text color="danger">
-  <!--<p *ngIf="errorMsg">{{ errorMsg }}</p>-->
-</ion-text>
+
+  <div class="bg-img bg-default"></div>
+  
   <ion-card class="card-mascota" *ngFor="let mascota of mascotas">
-    <img [src]="mascota.foto_mascota_url" alt="Foto de{{ mascota.nombre }}" />
+    <img [src]="mascota.foto_mascota_url" alt="Foto de {{ mascota.nombre }}" />
 
     <ion-card-header>
       <ion-card-title>{{ mascota.nombre }}</ion-card-title>
@@ -47,18 +43,33 @@
       <p><strong>Peso:</strong> {{ mascota.peso }} kg</p>
     </ion-card-content>
 
-    <!-- Botón: Perfil -->
-    <ion-button (click)="perfilMascota(mascota)" class="clrPrincipal boton-flotante perfil" size="small">
-      <ion-icon slot="start" name="paw-sharp"></ion-icon>
-      Perfil
-    </ion-button>
+    <div class="acciones-mascota">
+      <ion-button (click)="perfilMascota(mascota)" color="primary" size="small">
+        <ion-icon slot="start" name="paw-sharp"></ion-icon>
+        Perfil
+      </ion-button>
 
-    <!-- Botón: Vacunas -->
-    <ion-button (click)="histVacuna(mascota)" class="clrPrincipal boton-flotante vacunas" size="small">
-      <ion-icon slot="start" name="medkit"></ion-icon>
-      Vacunas
-    </ion-button>
+      <ion-button (click)="histVacuna(mascota)" color="primary" size="small">
+        <ion-icon slot="start" name="medkit"></ion-icon>
+        Vacunas
+      </ion-button>
+    </div>
   </ion-card>
+
+  <!-- Botones flotantes visibles: Añadir y Analizar -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <div class="fab-buttons-stack">
+      <ion-fab-button (click)="analizar()" color="primary">
+        <ion-icon name="search"></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button (click)="anadir()" color="primary">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </div>
+  </ion-fab>
+
 </ion-content>
+
 
 

@@ -1,8 +1,77 @@
 .content {
---background: #51ccf5;
---background: linear-gradient(360deg, rgba(81, 204, 245, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  --background: linear-gradient(360deg, rgba(81, 204, 245, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .card {
- --background: #8d8d8d67;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+ion-card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+ion-card-content {
+  p {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #222;
+    text-align: center;
+  }
+
+  img {
+    display: block;
+    margin: 1rem auto 0;
+    border-radius: 12px;
+    max-width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+input[type="file"] {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 8px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.boton-comparar {
+  --border-radius: 24px;
+  font-weight: 600;
+  text-transform: none;
+  --box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+
+  // Selector profundo para que el radius se aplique a pesar de herencias.
+  &::part(native) {
+    border-radius: 24px;
+  }
+}
+
+
+
+.back-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  --background: var(--ion-color-primary);
+  --color: white;
+  --box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
 }
