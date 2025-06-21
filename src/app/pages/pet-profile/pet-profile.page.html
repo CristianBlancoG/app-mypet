@@ -6,10 +6,19 @@
 
 <ion-content [fullscreen]="true" id="main-content" class="content">
   <div class="bg-img bg-default"></div>
+
   <div *ngIf="mascota">
     <ion-card class="card-petprofile" [class.fallecido]="mascota?.esta_muerta === 1">
       <img [src]="mascota.foto_mascota_url || 'assets/default-pet.png'" alt="Foto de {{ mascota.nombre }}" />
-      
+
+<ion-card *ngIf="fotosNariz.length > 0" class="carousel-container">
+  <ion-slides [options]="slideOpts">
+    <ion-slide *ngFor="let foto of fotosNariz">
+      <img [src]="foto.url" alt="Foto nariz" class="img-carousel" />
+    </ion-slide>
+  </ion-slides>
+</ion-card>
+
       <ion-card-header>
         <ion-card-title>
           <ion-input *ngIf="isEditing" [(ngModel)]="mascota.nombre"></ion-input>
@@ -39,14 +48,14 @@
           <span *ngIf="!isEditing"> {{ mascota.tipo_pelaje }}</span>
         </p>
         <p><strong>Fecha de nacimiento:</strong> 
-          <ion-input *ngIf="isEditing"  [(ngModel)]="mascota.fecha_nacimiento"></ion-input>
+          <ion-input *ngIf="isEditing"  [(ngModel)]="mascota.fecha_nacimiento" type="date"></ion-input>
           <span *ngIf="!isEditing"> {{ mascota.fecha_nacimiento }}</span>
         </p>
         <p><strong>Fallecido:</strong> 
           <ion-select *ngIf="isEditing" [(ngModel)]="mascota.esta_muerta" interface="popover">
-  <ion-select-option [value]="0">No</ion-select-option>
-  <ion-select-option [value]="1">Sí</ion-select-option>
-</ion-select>
+            <ion-select-option [value]="0">No</ion-select-option>
+            <ion-select-option [value]="1">Sí</ion-select-option>
+          </ion-select>
           <span *ngIf="!isEditing"> {{ mascota.esta_muerta === 1 ? 'Sí' : 'No' }}</span>
         </p>
       </ion-card-content>
@@ -65,7 +74,13 @@
     </ion-card>
   </div>
 
-<ion-button shape="round" (click)="goBack()" class="back-button">
-  <ion-icon slot="icon-only" name="arrow-back" size="large"></ion-icon>
-</ion-button>
+  <ion-button shape="round" (click)="goBack()" class="back-button">
+    <ion-icon slot="icon-only" name="arrow-back" size="large"></ion-icon>
+  </ion-button>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="seleccionarImagenes()">
+    <ion-icon name="camera"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 </ion-content>

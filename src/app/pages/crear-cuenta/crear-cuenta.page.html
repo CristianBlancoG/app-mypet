@@ -1,40 +1,64 @@
-<ion-header [translucent]="true">
-  <ion-toolbar class="toolbarColor">
-    <ion-title>Nuevo Usuario</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true" class="page-content">
-  
-  <!-- Fondo con difuminado -->
   <div class="bg-img bg-default"></div>
 
   <div class="overlay">
     <ion-card class="card-translucent">
 
-      <!-- Campos del formulario -->
+      <!-- Email con validación -->
       <ion-item class="input-translucent">
-        <ion-input [(ngModel)]="mdl_email" label="Correo Electrónico" labelPlacement="floating"></ion-input>
+        <ion-input [(ngModel)]="mdl_email" (ionChange)="validarEmail()" 
+                  label="Correo Electrónico" type="email" 
+                  labelPlacement="floating"></ion-input>
+      </ion-item>
+      <ion-note *ngIf="mdl_email && !emailValido" color="danger" class="ion-padding">
+        Ingrese un email válido
+      </ion-note>
+
+      <!-- Contraseña con validación -->
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_pass" (ionChange)="validarPassword()" 
+                  type="password" label="Contraseña" 
+                  labelPlacement="floating"></ion-input>
+      </ion-item>
+      <ion-note *ngIf="mdl_pass && !passValida" color="danger" class="ion-padding">
+        La contraseña debe tener al menos 8 caracteres, incluir un número y un carácter especial
+      </ion-note>
+
+      <!-- Nombre con validación de longitud -->
+      <ion-item class="input-translucent">
+        <ion-input [(ngModel)]="mdl_name" (ionChange)="validarFormulario()" 
+                  label="Nombre" labelPlacement="floating"
+                  maxlength="100"></ion-input>
       </ion-item>
 
+      <!-- Apellido con validación de longitud -->
       <ion-item class="input-translucent">
-        <ion-input [(ngModel)]="mdl_pass" type="password" label="Contraseña" labelPlacement="floating"></ion-input>
+        <ion-input [(ngModel)]="mdl_lastname" (ionChange)="validarFormulario()" 
+                  label="Apellido" labelPlacement="floating"
+                  maxlength="100"></ion-input>
       </ion-item>
 
+      <!-- RUT con validación -->
       <ion-item class="input-translucent">
-        <ion-input [(ngModel)]="mdl_name" label="Nombre" labelPlacement="floating"></ion-input>
+          <ion-input 
+              [value]="rutVisual" 
+              (ionInput)="formatearRutVisual($event)"
+              (ionBlur)="validarRutCompleto()" 
+              label="Rut" 
+              labelPlacement="floating"
+              placeholder="12.345.678-9"
+              type="text"
+              > <!-- Mejor teclado en dispositivos móviles -->
+          </ion-input>
       </ion-item>
+      <ion-note *ngIf="rutCompleto && !rutValido" color="danger" class="ion-padding">
+          Ingrese un RUT válido
+      </ion-note>
 
+      <!-- Resto de campos -->
       <ion-item class="input-translucent">
-        <ion-input [(ngModel)]="mdl_lastname" label="Apellido" labelPlacement="floating"></ion-input>
-      </ion-item>
-
-      <ion-item class="input-translucent">
-        <ion-input [(ngModel)]="mdl_id" label="Rut" labelPlacement="floating"></ion-input>
-      </ion-item>
-
-      <ion-item class="input-translucent">
-        <ion-select [(ngModel)]="mdl_gen" label="Género" labelPlacement="floating" interface="popover">
+        <ion-select [(ngModel)]="mdl_gen" (ionChange)="validarFormulario()" 
+                    label="Género" labelPlacement="floating" interface="popover">
           <ion-select-option value="Masculino">Masculino</ion-select-option>
           <ion-select-option value="Femenino">Femenino</ion-select-option>
           <ion-select-option value="Otro">Otro</ion-select-option>
@@ -42,16 +66,21 @@
       </ion-item>
 
       <ion-item class="input-translucent">
-        <ion-input [(ngModel)]="mdl_dir" label="Dirección" labelPlacement="floating"></ion-input>
+        <ion-input [(ngModel)]="mdl_dir" (ionChange)="validarFormulario()" 
+                  label="Dirección" labelPlacement="floating"
+                  maxlength="100"></ion-input>
       </ion-item>
 
       <ion-item class="input-translucent">
-        <ion-input [(ngModel)]="mdl_phone" label="Teléfono" labelPlacement="floating"></ion-input>
+        <ion-input [(ngModel)]="mdl_phone" (ionChange)="validarFormulario()" 
+                  label="Teléfono" labelPlacement="floating"
+                  type="tel"></ion-input>
       </ion-item>
-      <ion-button expand="block" (click)="crearCuenta()" class="btn-crear-cuenta">
-      Crear Cuenta
-      </ion-button>
 
+      <ion-button expand="block" (click)="crearCuenta()" 
+                [disabled]="!formValido" class="btn-crear-cuenta">
+        Crear Cuenta
+      </ion-button>
 
     </ion-card>
   </div>

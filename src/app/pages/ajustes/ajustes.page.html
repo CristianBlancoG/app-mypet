@@ -28,9 +28,13 @@
       <ion-card-content>
         <p><strong>RUT:</strong> {{ usuario.rut }} </p>
 
-        <p><strong>Email:</strong>
+              <p><strong>Email:</strong>
           <ng-container *ngIf="isEditing; else emailView">
-            <ion-input type="email" [(ngModel)]="usuario.email" placeholder="Correo electrónico"></ion-input>
+            <ion-input type="email" [(ngModel)]="usuario.email" (ionChange)="validarEmail()" 
+                      placeholder="Correo electrónico"></ion-input>
+            <ion-note *ngIf="!emailValido" color="danger" class="ion-padding">
+              Ingrese un email válido
+            </ion-note>
           </ng-container>
           <ng-template #emailView> {{ usuario.email }} </ng-template>
         </p>
@@ -51,10 +55,15 @@
 
         <div *ngIf="isEditing">
           <p><strong>Nueva Contraseña:</strong>
-            <ion-input type="password" [(ngModel)]="nuevaContrasena" placeholder="Nueva contraseña"></ion-input>
+            <ion-input type="password" [(ngModel)]="nuevaContrasena" (ionChange)="validarPassword()" 
+                      placeholder="Nueva contraseña"></ion-input>
           </p>
           <p><strong>Confirmar Contraseña:</strong>
-            <ion-input type="password" [(ngModel)]="confirmarContrasena" placeholder="Confirmar contraseña"></ion-input>
+            <ion-input type="password" [(ngModel)]="confirmarContrasena" (ionChange)="validarPassword()" 
+                      placeholder="Confirmar contraseña"></ion-input>
+            <ion-note *ngIf="nuevaContrasena && !passValida" color="danger" class="ion-padding">
+              La contraseña debe tener al menos 8 caracteres, incluir un número, un carácter especial y coincidir
+            </ion-note>
           </p>
         </div>
 
@@ -64,15 +73,15 @@
       </ion-card-content>
 
       <div class="button-container" *ngIf="isEditing">
-        <ion-button (click)="cancelarEdicion()" color="medium">
-          <ion-icon slot="start" name="close"></ion-icon>
-          Cancelar
-        </ion-button>
-        <ion-button (click)="guardarCambios()" color="primary">
-          <ion-icon slot="start" name="save"></ion-icon>
-          Guardar
-        </ion-button>
-      </div>
+  <ion-button (click)="cancelarEdicion()" color="medium">
+    <ion-icon slot="start" name="close"></ion-icon>
+    Cancelar
+  </ion-button>
+  <ion-button (click)="guardarCambios()" color="primary" [disabled]="!formValido">
+    <ion-icon slot="start" name="save"></ion-icon>
+    Guardar
+  </ion-button>
+</div>
     </ion-card>
 
 <ion-button (click)="goBack()" class="back-button" shape="round">

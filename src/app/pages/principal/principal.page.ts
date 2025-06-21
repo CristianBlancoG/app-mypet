@@ -37,7 +37,7 @@ export class PrincipalPage {
   }
   }
 
-  cargarMascotas(rut:string) {
+  cargarMascotas(rut:string,) {
     this.api.mascotaListar(rut).subscribe({
       next: (data: any) => {
         this.mascotas = data;

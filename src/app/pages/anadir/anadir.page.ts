@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { DbService } from 'src/app/services/api/db.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 
 @Component({
   selector: 'app-anadir',
@@ -121,4 +122,65 @@ this.router.navigate(['/principal'], extras);
   await alert.present();
 }
 
+async seleccionarImagenes() {
+  try {
+    const image = await Camera.pickImages({
+      quality: 80,
+      limit: 5
+    });
+
+    if (image && image.photos.length > 0) {
+      for (const photo of image.photos) {
+        const base64 = await this.readAsBase64(photo.webPath!);
+        await this.subirFotoNariz(base64);
+      }
+      this.showAlert('Éxito', 'Fotos subidas correctamente');
+    }
+  } catch (error) {
+    console.error('Error al seleccionar imágenes', error);
+  }
 }
+
+// Convertir a base64
+async readAsBase64(path: string): Promise<string> {
+  const response = await fetch(path);
+  const blob = await response.blob();
+  return await this.convertBlobToBase64(blob) as string;
+}
+
+convertBlobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
+async subirFotoNariz(base64: string) {
+  const nombre = `foto_${Date.now()}.jpg`;
+
+  const formData = new FormData();
+  formData.append('archivo', base64);
+  formData.append('nombre', nombre);
+
+  const response = await fetch('https://ecofloat.space/subida_base64.php', {
+    method: 'POST',
+    body: formData
+  });
+
+  const result = await response.json();
+  const urlFinal = 'https://ecofloat.space/imagenes/' + result.nombreArchivo;
+
+  // Guardar en tabla FotoNariz
+
+
+
+}
+
+}
+
+
+

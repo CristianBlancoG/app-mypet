@@ -1,105 +1,156 @@
 import { Component, OnInit } from '@angular/core';
 import { DbService } from 'src/app/services/api/db.service';
 import { NavigationExtras, Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 
 @Component({
   selector: 'app-pet-profile',
   templateUrl: './pet-profile.page.html',
   styleUrls: ['./pet-profile.page.scss'],
-  standalone: false,
+  standalone: false
 })
-
 export class PetProfilePage implements OnInit {
-mascota: any;
+  mascota: any;
   isEditing = false;
   originalData: any;
   errorMsg = '';
-  
-  constructor( private router: Router,private alertController: AlertController,private loadingController: LoadingController,private api: DbService) { 
-    
-   const navigation = this.router.getCurrentNavigation();
+  fotosNariz: any[] = [];
+  rutDuenio: any;
+
+  slideOpts = {
+    initialSlide: 0,
+    speed: 400,
+    loop: true
+  };
+
+  constructor(
+    private router: Router,
+    private alertController: AlertController,
+    private loadingController: LoadingController,
+    private api: DbService
+  ) {
+    const navigation = this.router.getCurrentNavigation();
     this.mascota = navigation?.extras?.state?.['mascota'];
     if (this.mascota) {
-      this.originalData = {...this.mascota};
+      this.originalData = { ...this.mascota };
     }
   }
 
   ngOnInit() {
+
   }
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
     if (!this.isEditing) {
-      this.mascota = {...this.originalData};
+      this.mascota = { ...this.originalData };
     }
   }
 
   async saveChanges() {
-  const loading = await this.loadingController.create({
-    message: 'Guardando cambios...',
-  });
-  await loading.present();
+    const loading = await this.loadingController.create({
+      message: 'Guardando cambios...',
+    });
+    await loading.present();
 
-  try {
-    // Asegurémonos de convertir los tipos de datos correctamente
-    const datosActualizados = this.mascota;
-
-
-
-    this.api.updatePet(datosActualizados).subscribe(
-      (response: any) => {
-        loading.dismiss();
-        if (response && response.success) {
-          this.originalData = {...this.mascota};
-          this.isEditing = false;
-          this.showAlert('Éxito', 'Datos actualizados correctamente');
-        } else {
-          this.errorMsg = response?.error || 'Error en el servidor al guardar!';
-          console.error('Error del servidor:', response);
+    try {
+      const datosActualizados = this.mascota;
+      this.api.updatePet(datosActualizados).subscribe(
+        (response: any) => {
+          loading.dismiss();
+          if (response && response.success) {
+            this.originalData = { ...this.mascota };
+            this.isEditing = false;
+            this.showAlert('Éxito', 'Datos actualizados correctamente');
+          } else {
+            this.errorMsg = response?.error || 'Error en el servidor al guardar!';
+          }
+        },
+        (error: any) => {
+          loading.dismiss();
+          this.errorMsg = 'Error de conexión: ' + (error.message || 'Error desconocido');
         }
-      },
-      (error) => {
-        loading.dismiss();
-        this.errorMsg = 'Error de conexión: ' + (error.message || error.statusText || 'Error desconocido');
-        console.error('Error HTTP:', error);
-      }
-    );
-  } catch (error:any) {
-    loading.dismiss();
-    this.errorMsg = 'Error al preparar datos: ' + error.message;
-    console.error('Error local:', error);
+      );
+    } catch (error: any) {
+      loading.dismiss();
+      this.errorMsg = 'Error al preparar datos: ' + error.message;
+    }
   }
-}
 
   async showAlert(header: string, message: string) {
-    const alert = await this.alertController.create({
-      header,
-      message,
-      buttons: ['OK']
-    });
+    const alert = await this.alertController.create({ header, message, buttons: ['OK'] });
     await alert.present();
   }
 
-  changeImage() {
-    // Implementar lógica para cambiar imagen
-    console.log('Cambiar imagen');
-  }
-
   cerrarSesion() {
-    // Lógica para cerrar sesión
     localStorage.removeItem('usuario');
     this.router.navigate(['/login']);
   }
- 
+
   goBack() {
- let extras :NavigationExtras ={
-  replaceUrl: true
-  
-    }
+    const extras: NavigationExtras = { replaceUrl: true };
     localStorage.removeItem('mascota');
-    this.router.navigate(['/principal',extras]);
+    this.router.navigate(['/principal', extras]);
   }
+
+  async seleccionarImagenes() {
+  try {
+    const image = await Camera.pickImages({
+      quality: 80,
+      limit: 5
+    });
+
+    if (image && image.photos.length > 0) {
+      for (const photo of image.photos) {
+        const base64 = await this.readAsBase64(photo.webPath!);
+        await this.subirFotoNariz(base64);
+      }
+      this.showAlert('Éxito', 'Fotos subidas correctamente');
+    }
+  } catch (error) {
+    console.error('Error al seleccionar imágenes', error);
+  }
+}
+
+// Convertir a base64
+async readAsBase64(path: string): Promise<string> {
+  const response = await fetch(path);
+  const blob = await response.blob();
+  return await this.convertBlobToBase64(blob) as string;
+}
+
+convertBlobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
+async subirFotoNariz(base64: string) {
+  const nombre = `foto_${Date.now()}.jpg`;
+
+  const formData = new FormData();
+  formData.append('archivo', base64);
+  formData.append('nombre', nombre);
+
+  const response = await fetch('https://ecofloat.space/subida_base64.php', {
+    method: 'POST',
+    body: formData
+  });
+
+  const result = await response.json();
+  const urlFinal = 'https://ecofloat.space/imagenes/' + result.nombreArchivo;
+
+  // Guardar en tabla FotoNariz
+
+
+
+}
 
 }

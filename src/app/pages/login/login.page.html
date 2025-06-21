@@ -5,35 +5,33 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="login-content">
-
   <div class="bg-img"></div>
-
   <div class="overlay">
     <ion-card class="card-translucent">
       <ion-grid>
         <ion-row class="ion-justify-content-center">
           <ion-col size="12" size-md="6" class="ion-text-center">
-
             <ion-item class="input-translucent">
-              <ion-input [(ngModel)]="mdl_rut" label="Rut" labelPlacement="floating"></ion-input>
+              <ion-input 
+                [value]="rutVisual" 
+                (ionInput)="formatearRutVisual($event)"
+                label="Rut" 
+                labelPlacement="floating"
+                placeholder="12.345.678-9"
+                type="text"></ion-input>
             </ion-item>
-
             <ion-item class="input-translucent">
               <ion-input [(ngModel)]="mdl_pass" type="password" label="Contraseña" labelPlacement="floating"></ion-input>
             </ion-item>
-
             <ion-button class="btn-login" (click)="navegar()" [disabled]="!mdl_rut || !mdl_pass" expand="block">
               Ingresar
             </ion-button>
-
             <ion-button class="btn-crear" (click)="navegarCrearCuenta()" fill="clear" expand="block">
               Crear Cuenta
             </ion-button>
-
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card>
   </div>
-
 </ion-content>

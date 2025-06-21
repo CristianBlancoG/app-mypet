@@ -22,22 +22,21 @@ switch ($method) {
     case 'GET':
             // Verificar si se entregaron parámetros
             if (isset($_GET['rut']) && isset($_GET['contrasena'])) {
+                $input_password = $_GET['contrasena']; // o desde POST si usas JSON
                 $rut = $_GET['rut'];
-                $contrasena = $_GET['contrasena'];
 
-                $stmt = $conn->prepare("SELECT * FROM Persona WHERE rut = ? AND contrasena = ?");
-                $stmt->bind_param("ss", $rut, $contrasena);
+                $stmt = $conn->prepare("SELECT * FROM Persona WHERE rut = ?");
+                $stmt->bind_param("s", $rut);
                 $stmt->execute();
                 $result = $stmt->get_result();
                 $persona = $result->fetch_assoc();
 
-                if ($persona) {
+                if ($persona && password_verify($input_password, $persona['contrasena'])) {
                     echo json_encode($persona);
                 } else {
                     http_response_code(401); // Unauthorized
                     echo json_encode(["error" => "Credenciales inválidas"]);
                 }
-
                 $stmt->close();
             }
             break;
