@@ -11,14 +11,6 @@
     <ion-card class="card-petprofile" [class.fallecido]="mascota?.esta_muerta === 1">
       <img [src]="mascota.foto_mascota_url || 'assets/default-pet.png'" alt="Foto de {{ mascota.nombre }}" />
 
-<ion-card *ngIf="fotosNariz.length > 0" class="carousel-container">
-  <ion-slides [options]="slideOpts">
-    <ion-slide *ngFor="let foto of fotosNariz">
-      <img [src]="foto.url" alt="Foto nariz" class="img-carousel" />
-    </ion-slide>
-  </ion-slides>
-</ion-card>
-
       <ion-card-header>
         <ion-card-title>
           <ion-input *ngIf="isEditing" [(ngModel)]="mascota.nombre"></ion-input>
@@ -59,6 +51,28 @@
           <span *ngIf="!isEditing"> {{ mascota.esta_muerta === 1 ? 'Sí' : 'No' }}</span>
         </p>
       </ion-card-content>
+
+      <div *ngIf="fotosNariz.length > 0" id="carouselNariz" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner rounded">
+          <div *ngFor="let foto of fotosNariz; let i = index" class="carousel-item" [class.active]="i === 0">
+            <img [src]="foto.url" class="d-block w-100" alt="Foto nariz {{ i + 1 }}">
+            <div class="carousel-caption d-block">
+              <small class="text-white">Foto nariz {{ i + 1 }}</small>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselNariz" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselNariz" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+          <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+
 
       <div class="button-container">
         <ion-button (click)="toggleEdit()" class="clrPrincipal boton-flotante perfil" size="small">

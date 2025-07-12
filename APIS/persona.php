@@ -20,26 +20,46 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-            // Verificar si se entregaron parámetros
-            if (isset($_GET['rut']) && isset($_GET['contrasena'])) {
-                $input_password = $_GET['contrasena']; // o desde POST si usas JSON
-                $rut = $_GET['rut'];
+    if (isset($_GET['rut']) && isset($_GET['contrasena'])) {
+        // Autenticación
+        $input_password = $_GET['contrasena'];
+        $rut = $_GET['rut'];
 
-                $stmt = $conn->prepare("SELECT * FROM Persona WHERE rut = ?");
-                $stmt->bind_param("s", $rut);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $persona = $result->fetch_assoc();
+        $stmt = $conn->prepare("SELECT * FROM Persona WHERE rut = ?");
+        $stmt->bind_param("s", $rut);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $persona = $result->fetch_assoc();
 
-                if ($persona && password_verify($input_password, $persona['contrasena'])) {
-                    echo json_encode($persona);
-                } else {
-                    http_response_code(401); // Unauthorized
-                    echo json_encode(["error" => "Credenciales inválidas"]);
-                }
-                $stmt->close();
-            }
-            break;
+        if ($persona && password_verify($input_password, $persona['contrasena'])) {
+            echo json_encode($persona);
+        } else {
+            http_response_code(401);
+            echo json_encode(["error" => "Credenciales inválidas"]);
+        }
+        $stmt->close();
+
+    } elseif (isset($_GET['rut'])) {
+        // Consulta simple por rut
+        $rut = $_GET['rut'];
+        $stmt = $conn->prepare("SELECT * FROM Persona WHERE rut = ?");
+        $stmt->bind_param("s", $rut);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $persona = $result->fetch_assoc();
+
+        if ($persona) {
+            echo json_encode($persona);
+        } else {
+            http_response_code(404);
+            echo json_encode(["error" => "Persona no encontrada"]);
+        }
+        $stmt->close();
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Parámetro rut requerido"]);
+    }
+    break;
 
 
 

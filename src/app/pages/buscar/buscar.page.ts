@@ -10,54 +10,56 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BuscarPage {
   archivoSeleccionado: File | null = null;
+  imagenURL: string | null = null;
   resultado: number | null = null;
-  imagenComparativa: string | null = null;
+  matchId: string | null = null;
+  urls: string[] = [];
+  duenio: any = null;
+  cargando = false;
+  nombreMascota: string | null = null;
+  baseApi = 'https://ecofloat.space';
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  subirYComparar(event: any) {
-    this.archivoSeleccionado = event.target.files[0];
-    this.mostrarAlerta('Imagen seleccionada', `Nombre: ${this.archivoSeleccionado?.name}`);
+  subirYComparar(e: any) {
+    this.archivoSeleccionado = e.target.files[0];
+    if (this.archivoSeleccionado) {
+      this.imagenURL = URL.createObjectURL(this.archivoSeleccionado);
+    }
   }
 
-  enviarImagen() {
-    if (!this.archivoSeleccionado) {
-      this.mostrarAlerta('Error', 'No se ha seleccionado una imagen.');
-      return;
-    }
+  buscarNariz() {
+    if (!this.archivoSeleccionado) return;
 
-    const formData = new FormData();
-    formData.append('archivo', this.archivoSeleccionado);
+    const fd = new FormData();
+    fd.append('file', this.archivoSeleccionado);
+    this.cargando = true;
 
-    this.http.post<any>('http://178.156.132.72:5000/comparar', formData)
-      .subscribe({
-        next: (res) => {
-          if (res && res.similitud && res.imagen_resultado) {
-            this.resultado = res.similitud;
-            this.imagenComparativa = res.imagen_resultado;
-            this.mostrarAlerta('Comparación exitosa', `Similitud: ${res.similitud}%`);
-          } else {
-            this.mostrarAlerta('Respuesta inválida del servidor', JSON.stringify(res));
-          }
-        },
-        error: (err) => {
-          console.error('Error al comparar imagen', err);
-          let mensaje = 'No se pudo comparar la imagen. Intenta de nuevo.';
+    this.http.post<any>(`${this.baseApi}/search_nose`, fd)
+      .subscribe(res => {
+        this.cargando = false;
 
-          if (err.error && typeof err.error === 'string') {
-            mensaje += '\n\nDetalle: ' + err.error;
-          } else if (err.error && err.error.error) {
-            mensaje += '\n\nDetalle: ' + err.error.error;
-          } else if (err.message) {
-            mensaje += '\n\nMensaje: ' + err.message;
-          }
-
-          this.mostrarAlerta('Error al subir la imagen', mensaje);
+        if (res.match === null) {
+          alert("No se encontró coincidencia");
+          this.nombreMascota = null;
+          this.duenio = null;
+          return;
         }
+
+        this.resultado = res.score;
+        this.matchId = res.match;
+        this.urls = res.urls || [];
+        this.duenio = res.duenio || null;
+        this.nombreMascota = res.nombre_mascota || null;
+
+      }, err => {
+        console.error(err);
+        alert('Error al buscar coincidencia');
+        this.cargando = false;
       });
   }
 
-  mostrarAlerta(titulo: string, mensaje: string) {
-    alert(`${titulo}\n\n${mensaje}`);
+  irAInicio() {
+    this.router.navigate(['/principal']);
   }
 }

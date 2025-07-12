@@ -5,6 +5,17 @@
   z-index: 1;
 }
 
+.carousel {
+  max-height: 220px;
+  overflow: hidden;
+}
+.carousel-inner img {
+  object-fit: cover;
+  height: 220px;
+  border-radius: 12px;
+}
+
+
 /* Imagen de fondo ya incluida desde global.scss */
 .bg-img {
   z-index: -1;

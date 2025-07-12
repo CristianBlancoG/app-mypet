@@ -58,4 +58,10 @@ export class DbService {
     data.accion = 'actualizar';
     return this.http.post(this.telefono_api, data);
   }
+
+  obtenerFotosNariz(mascotaId: number) {
+  const params = new HttpParams().set('mascota_id', mascotaId.toString());
+  return this.http.get(`${this.base}/foto_nariz.php`, { params });
+}
+
 }

@@ -12,25 +12,46 @@
     </ion-card-header>
 
     <ion-card-content>
-      <ion-grid>
-        <input type="file" accept="image/*" (change)="subirYComparar($event)">
-      </ion-grid>
-      <ion-grid>
-        <ion-row>
-          <ion-col></ion-col>
-          <ion-col>
-          <ion-button expand="full" class="boton-comparar" (click)="enviarImagen()" [disabled]="!archivoSeleccionado">
-            Enviar para comparar
-          </ion-button>
-          </ion-col>
-          <ion-col></ion-col>
-        </ion-row>
-      </ion-grid>
-      <div *ngIf="resultado !== null">
-        <p><strong>Resultado de comparación:</strong> {{ resultado }}%</p>
-        <img *ngIf="imagenComparativa" [src]="imagenComparativa" style="width: 100%; margin-top: 10px;">
-      </div>
-    </ion-card-content>
+  <ion-grid>
+    <input type="file" accept="image/*" (change)="subirYComparar($event)">
+    <img *ngIf="imagenURL" [src]="imagenURL" style="width: 100%; margin-top: 8px;">
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-button expand="full" class="boton-comparar" (click)="buscarNariz()" [disabled]="!archivoSeleccionado || cargando">
+          Buscar Coincidencia
+        </ion-button>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="cargando">
+      <ion-col class="ion-text-center">
+        <ion-spinner name="dots"></ion-spinner>
+        <p>Buscando coincidencias...</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+<div *ngIf="nombreMascota">
+  <p><strong>Mascota encontrada:</strong> {{ nombreMascota }}</p>
+</div>
+<div *ngIf="duenio">
+  <p><strong>Dueño:</strong> {{ duenio.nombre }}</p>
+  <p><strong>Email:</strong> {{ duenio.email }}</p>
+  <p><strong>Teléfono:</strong> {{ duenio.telefono }}</p>
+</div>
+
+
+  <ion-button expand="block" color="medium" (click)="irAInicio()">
+    <ion-icon name="home" slot="start"></ion-icon>
+    Volver al Inicio
+  </ion-button>
+</ion-card-content>
+
   </ion-card>
  
   <ion-button class="back-button" shape="round">

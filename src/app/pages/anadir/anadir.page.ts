@@ -1,11 +1,8 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DbService } from 'src/app/services/api/db.service';
 import { NavigationExtras, Router } from '@angular/router';
-import { IonModal } from '@ionic/angular';
-import { AlertController, LoadingController } from '@ionic/angular';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-
+import { IonModal, AlertController } from '@ionic/angular';
+import { Camera } from '@capacitor/camera';
 
 @Component({
   selector: 'app-anadir',
@@ -13,7 +10,8 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
   styleUrls: ['./anadir.page.scss'],
   standalone: false
 })
-export class AnadirPage implements OnInit{
+export class AnadirPage implements OnInit {
+  // Campos de la mascota
   mdl_nombre = '';
   mdl_raza = '';
   mdl_peso = '';
@@ -21,166 +19,135 @@ export class AnadirPage implements OnInit{
   mdl_pelaje = '';
   mdl_edad: number | null = null;
   mdl_fnac = '';
- fechaNacimientoFormateada: string = '';
+  fechaNacimientoFormateada = '';
   mdl_muerta = 0;
-  imagenURL = '';
 
-  rut_duenio: string= ''; 
+  // Para foto de perfil y nariz
+  fileProfile: File | null = null;
+  file1: File | null = null;
+  file2: File | null = null;
+  file3: File | null = null;
 
+  rut_duenio = '';
   usuario: any = null;
-  loadingController: any;
 
-@ViewChild('modalFecha', { static: false }) modalFecha!: IonModal;
-  constructor(private api: DbService, private router: Router, private alertController: AlertController) {}
+  @ViewChild('modalFecha', { static: false }) modalFecha!: IonModal;
+
+  constructor(
+    private api: DbService,
+    private router: Router,
+    private alertController: AlertController
+  ) {}
+
   ngOnInit() {
-    const storedUser = localStorage.getItem('usuario');
-  if (storedUser) {
-    this.usuario = JSON.parse(storedUser);
-    this.rut_duenio = this.usuario.rut;
-  }throw new Error('Method not implemented.');
+    const stored = localStorage.getItem('usuario');
+    if (stored) {
+      this.usuario = JSON.parse(stored);
+      this.rut_duenio = this.usuario.rut;
+    }
   }
 
- subirImagen(event: any) {
-  const archivo = event.target.files[0];
-  const formData = new FormData();
-  formData.append('archivo', archivo);
-
-  fetch('https://ecofloat.space/subida.php', {
-    method: 'POST',
-    body: formData
-  })
-  .then(async res => {
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Error del servidor (${res.status}): ${text}`);
-    }
-    return res.json();
-  })
-  .then(data => {
-    this.imagenURL = 'https://ecofloat.space/imagenes/' + data.nombreArchivo;
-  })
-  .catch(err => {
-    this.showAlert('Error al subir la imagen', err.message || 'Error desconocido');
-  });
-}
-
-
-  guardarMascota() {
-  const datos = {
-    rut_duenio: this.rut_duenio,
-    nombre: this.mdl_nombre,
-    raza: this.mdl_raza,
-    peso: this.mdl_peso,
-    color: this.mdl_color,
-    tipo_pelaje: this.mdl_pelaje,
-    edad: this.mdl_edad,
-    fecha_nacimiento: this.mdl_fnac,
-    esta_muerta: this.mdl_muerta ? 1 : 0,
-    foto_mascota_url: this.imagenURL
-  };
-
-  this.api.updatePet(datos).subscribe({
-    next: () => {
-      const extras: NavigationExtras = {
-        replaceUrl: true,
-        state: { recargar: true } // <- señal para que /home recargue
-      };
-this.router.navigate(['/principal'], extras);
-
-    },
-    error: () => {
-      alert('Error al guardar mascota');
-    }
-  });
+  // Selección de la foto de perfil
+  onSelectProfile(event: any) {
+    this.fileProfile = event.target.files[0] || null;
   }
 
-  onFechaSeleccionada(event: any) {
-    const fechaISO = event.detail.value; // formato: 2025-05-29
-    this.mdl_fnac = fechaISO;
-
-    // Formatear a DD/MM/AAAA
-    const fecha = new Date(fechaISO);
-    const dia = String(fecha.getDate()).padStart(2, '0');
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-    const anio = fecha.getFullYear();
-    this.fechaNacimientoFormateada = `${dia}/${mes}/${anio}`;
-
-    // Cerrar modal
-    this.modalFecha?.dismiss();
+  // Selección de cada foto de nariz
+  onSelectNose(event: any, index: number) {
+    const file = event.target.files[0] || null;
+    if (file) (this as any)[`file${index}`] = file;
   }
 
   abrirCalendario() {
     this.modalFecha?.present();
   }
 
-  async showAlert(titulo: string, mensaje: string) {
-  const alert = await this.alertController.create({
-    header: titulo,
-    message: mensaje,
-    buttons: ['OK']
-  });
-  await alert.present();
-}
+  onFechaSeleccionada(event: any) {
+    const iso = event.detail.value;
+    this.mdl_fnac = iso;
+    const d = new Date(iso);
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    this.fechaNacimientoFormateada = `${dia}/${mes}/${d.getFullYear()}`;
+    this.modalFecha?.dismiss();
+  }
 
-async seleccionarImagenes() {
+  async showAlert(t: string, m: string) {
+    const a = await this.alertController.create({ header: t, message: m, buttons: ['OK'] });
+    await a.present();
+  }
+
+async guardarMascota() {
+  if (!this.fileProfile) {
+    return this.showAlert('Error', 'Debes seleccionar una foto de perfil');
+  }
+
+  const mascota = {
+    rut_duenio: this.rut_duenio,
+    nombre: this.mdl_nombre,
+    raza: this.mdl_raza,
+    peso: this.mdl_peso,
+    color: this.mdl_color,
+    tipo_pelaje: this.mdl_pelaje,
+    edad: this.mdl_edad?.toString() || '',
+    fecha_nacimiento: this.mdl_fnac,
+    esta_muerta: this.mdl_muerta ? '1' : '0',
+    foto_mascota_url: "https://ecofloat.space/imagenes/default.jpg" // temporal
+  };
+
   try {
-    const image = await Camera.pickImages({
-      quality: 80,
-      limit: 5
+    // 1. Crear mascota en PHP
+    const r1 = await fetch('https://ecofloat.space/mascota.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mascota)
     });
-
-    if (image && image.photos.length > 0) {
-      for (const photo of image.photos) {
-        const base64 = await this.readAsBase64(photo.webPath!);
-        await this.subirFotoNariz(base64);
-      }
-      this.showAlert('Éxito', 'Fotos subidas correctamente');
+    const j1 = await r1.json();
+    if (!r1.ok || !j1.id) {
+      return this.showAlert('Error', j1.error || 'Error al crear mascota');
     }
-  } catch (error) {
-    console.error('Error al seleccionar imágenes', error);
+
+    const petId = j1.id;
+
+    // 2. Subir fotos con API Python
+    const fd = new FormData();
+    fd.append('id', petId.toString());
+    if (this.fileProfile) fd.append('file_profile', this.fileProfile);
+    if (this.file1) fd.append('file1', this.file1);
+    if (this.file2) fd.append('file2', this.file2);
+    if (this.file3) fd.append('file3', this.file3);
+
+    const r2 = await fetch('https://ecofloat.space/register_pet', {
+      method: 'POST',
+      body: fd
+    });
+    const j2 = await r2.json();
+    if (!r2.ok) {
+      return this.showAlert('Error', j2.error || 'Error al subir fotos');
+    }
+
+    this.router.navigate(['/principal'], { replaceUrl: true, state: { recargar: true } });
+  } catch (err) {
+    console.error(err);
+    this.showAlert('Error', 'Fallo la conexión: ' + (err as any).message || 'desconocido');
   }
 }
 
-// Convertir a base64
-async readAsBase64(path: string): Promise<string> {
-  const response = await fetch(path);
-  const blob = await response.blob();
-  return await this.convertBlobToBase64(blob) as string;
+
+  private async subirFotosNariz(petId: number) {
+    const fd = new FormData();
+    fd.append('pet_id', petId.toString());
+    [this.file1, this.file2, this.file3].forEach((f, i) => {
+      if (f) fd.append(`file${i+1}`, f);
+    });
+
+    const r = await fetch('https://ecofloat.space/register_nose', {
+      method: 'POST',
+      body: fd
+    });
+    const j = await r.json();
+    if (!r.ok) {
+      this.showAlert('Error', j.error || 'Error al registrar fotos de nariz');
+    }
+  }
 }
-
-convertBlobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = reject;
-    reader.onload = () => {
-      resolve(reader.result);
-    };
-    reader.readAsDataURL(blob);
-  });
-}
-
-async subirFotoNariz(base64: string) {
-  const nombre = `foto_${Date.now()}.jpg`;
-
-  const formData = new FormData();
-  formData.append('archivo', base64);
-  formData.append('nombre', nombre);
-
-  const response = await fetch('https://ecofloat.space/subida_base64.php', {
-    method: 'POST',
-    body: formData
-  });
-
-  const result = await response.json();
-  const urlFinal = 'https://ecofloat.space/imagenes/' + result.nombreArchivo;
-
-  // Guardar en tabla FotoNariz
-
-
-
-}
-
-}
-
-
-

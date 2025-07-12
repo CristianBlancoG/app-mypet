@@ -8,13 +8,22 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        $result = $conn->query("SELECT * FROM FotoNariz");
+        if (isset($_GET['mascota_id'])) {
+        $mascota_id = intval($_GET['mascota_id']);
+        $stmt = $conn->prepare("SELECT * FROM FotoNariz WHERE mascota_id = ?");
+        $stmt->bind_param("i", $mascota_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $data = [];
         while ($row = $result->fetch_assoc()) {
             $data[] = $row;
         }
         echo json_encode($data);
-        break;
+    }else{
+        http_response_code(400);
+            echo json_encode(["error al obtener las fotos" => $stmt->error]);
+    }
+    break;
 
     case 'POST':
         $input = json_decode(file_get_contents('php://input'), true);

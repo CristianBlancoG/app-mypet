@@ -5,6 +5,7 @@ import { AlertController, LoadingController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 
+
 @Component({
   selector: 'app-pet-profile',
   templateUrl: './pet-profile.page.html',
@@ -19,11 +20,6 @@ export class PetProfilePage implements OnInit {
   fotosNariz: any[] = [];
   rutDuenio: any;
 
-  slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    loop: true
-  };
 
   constructor(
     private router: Router,
@@ -39,8 +35,26 @@ export class PetProfilePage implements OnInit {
   }
 
   ngOnInit() {
+    this.cargarFotosNariz(this.mascota.id);
 
   }
+
+  cargarFotosNariz(mascotaId: number) {
+  this.api.obtenerFotosNariz(mascotaId).subscribe({
+    next: (res: any) => {
+      // Suponiendo que res es un array con {id, mascota_id, url}
+      if (Array.isArray(res) && res.length > 0) {
+        this.fotosNariz = res.slice(0, 3); // Tomar solo las primeras 3 fotos
+      } else {
+        this.fotosNariz = [];
+      }
+    },
+    error: err => {
+      console.error("Error cargando fotos nariz:", err);
+      this.fotosNariz = [];
+    }
+  });
+}
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
@@ -152,5 +166,21 @@ async subirFotoNariz(base64: string) {
 
 
 }
+
+slideOpts = {
+  initialSlide: 0,
+  speed: 400,
+  slidesPerView: 1.1,
+  spaceBetween: 10,
+  breakpoints: {
+    640: {
+      slidesPerView: 2.2
+    },
+    992: {
+      slidesPerView: 3.2
+    }
+  }
+};
+
 
 }

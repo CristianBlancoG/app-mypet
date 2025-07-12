@@ -1,100 +1,148 @@
-from PIL import Image
-import math
+# api_nose_search.py
+
+import os
 import cv2
 import numpy as np
-import os
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi.responses import JSONResponse
+from starlette.staticfiles import StaticFiles
+from starlette.middleware.cors import CORSMiddleware
+from PIL import Image
 
-IMAGES_INPUT_DIR = "/var/www/ecofloat/imagenes"
-IMAGES_OUTPUT_DIR = "/var/www/ecofloat/imagenes/procesadas"
-os.makedirs(IMAGES_OUTPUT_DIR, exist_ok=True)
+app = FastAPI(title="Dog Nose Search & Register API")
 
-def escagris(img):
-    arr = img.load()
-    for x in range(img.size[0]):
-        for y in range(img.size[1]):
-            arr[x,y] = img.getpixel((x,y))
-    return arr
+# --- CONFIGURACIÓN ---
+BASE_IMAGES_DIR    = "/var/www/ecofloat/imagenes/procesadas"
+DESCRIPTORS_DIR    = BASE_IMAGES_DIR
+OUTPUT_MATCHES_DIR = "/var/www/ecofloat/imagenes/matches"
+STATIC_URL_PREFIX  = "/matches"
 
-def binarizacion(img, umbral):
-    arr = img.load()
-    for x in range(img.size[0]):
-        for y in range(img.size[1]):
-            p = img.getpixel((x,y))
-            arr[x,y] = 255 if p > umbral else 0
-    return arr
+ORB_NFEATURES      = 1000
+DISTANCE_THRESHOLD = 70
 
-def adelgazamiento(img, mascaraH, mascaraV):
-    arr = img.load()
-    for x in range(1,img.size[0]-1):
-        for y in range(1,img.size[1]-1):
-            vecinos = [img.getpixel((x+i, y+j)) for i in [-1,0,1] for j in [-1,0,1]]
-            Gx = sum(h*v for h, v in zip(sum(mascaraH, []), vecinos))
-            Gy = sum(h*v for h, v in zip(sum(mascaraV, []), vecinos))
-            valor = min(255, math.sqrt(Gx*Gx + Gy*Gy))
-            arr[x-1,y-1] = int(valor)
-    return arr
+# Asegura directorios
+os.makedirs(BASE_IMAGES_DIR, exist_ok=True)
+os.makedirs(OUTPUT_MATCHES_DIR, exist_ok=True)
 
-def poda(img, mascaraH, mascaraV):
-    arr = img.load()
-    for x in range(1,img.size[0]-1):
-        for y in range(1,img.size[1]-1):
-            vecinos = [img.getpixel((x+i, y+j)) for i in [-1,0,1] for j in [-1,0,1]]
-            Gx = sum(h*v for h, v in zip(sum(mascaraH, []), vecinos))
-            Gy = sum(h*v for h, v in zip(sum(mascaraV, []), vecinos))
-            valor = min(255, math.sqrt(Gx*Gx + Gy*Gy))
-            arr[x-1,y-1] = int(valor)
-    return arr
+# Sirve los matches
+app.mount(STATIC_URL_PREFIX, StaticFiles(directory=OUTPUT_MATCHES_DIR), name="matches")
 
-def preprocesar_y_guardar_temp(img_path):
-    huella = Image.open(img_path).convert("L")
-    escagris(huella)
-    escala_path = os.path.join(IMAGES_OUTPUT_DIR, "escalagrisu.tif")
-    huella.save(escala_path)
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["POST"],
+    allow_headers=["*"],
+)
 
-    huella = Image.open(escala_path).convert("L")
-    binarizacion(huella, 128)
-    bin_path = os.path.join(IMAGES_OUTPUT_DIR, "binarizacion.tif")
-    huella.save(bin_path)
+# --- PRECARGA EN MEMORIA ---
+base_descriptors = {}
+for fname in os.listdir(DESCRIPTORS_DIR):
+    if not fname.endswith(".descs.npy"):
+        continue
+    pet_img_name = fname.replace(".descs.npy", "")
+    desc_path    = os.path.join(DESCRIPTORS_DIR, fname)
+    try:
+        base_descriptors[pet_img_name] = np.load(desc_path)
+    except:
+        pass
+print(f"[Startup] {len(base_descriptors)} descriptores cargados.")
 
-    img = Image.open(bin_path).convert("L")
-    adelgazamiento(img, [[0,0,0],[0,1,0],[1,1,1]], [[0,0,0],[1,1,0],[0,1,0]])
-    adel_path = os.path.join(IMAGES_OUTPUT_DIR, "imgAdelgazada.tif")
-    img.save(adel_path)
+# --- ORB y Matcher ÚNICOS ---
+orb = cv2.ORB_create(ORB_NFEATURES)
+bf  = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
-    img = Image.open(adel_path).convert("L")
-    poda(img, [[0,0,0],[0,1,0],[0,0,0]], [[0,0,0],[0,1,0],[0,0,0]])
-    poda_path = os.path.join(IMAGES_OUTPUT_DIR, "imgpoda.tif")
-    img.save(poda_path)
+def preprocess_orb_bgr(img_bgr: np.ndarray):
+    gray  = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+    eq    = cv2.equalizeHist(gray)
+    kps, d = orb.detectAndCompute(eq, None)
+    return kps, d
 
-    return poda_path
+def compare_descs(d1: np.ndarray, d2: np.ndarray) -> float:
+    if d1 is None or d2 is None:
+        return 0.0
+    matches = bf.match(d1, d2)
+    if not matches:
+        return 0.0
+    good = [m for m in matches if m.distance < DISTANCE_THRESHOLD]
+    return len(good) / len(matches) * 100.0
 
-def comparar_patrones(img1_path, img2_path, output_folder):
-    output_path = os.path.join(output_folder, "orb_matches.png")
+# --- ENDPOINT: REGISTRO DE UNA NUEVA MASCOTA ---
+@app.post("/register_nose")
+async def register_nose(
+    pet_id: str = Form(...),
+    file: UploadFile = File(...)
+):
+    # 1. Lee la imagen
+    data = await file.read()
+    npimg = np.frombuffer(data, np.uint8)
+    img_bgr = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+    if img_bgr is None:
+        raise HTTPException(400, "Imagen inválida")
 
-    img1 = cv2.imread(img1_path, cv2.IMREAD_GRAYSCALE)
-    img2 = cv2.imread(img2_path, cv2.IMREAD_GRAYSCALE)
-    if img1 is None or img2 is None:
-        raise ValueError("No se pudieron cargar las imágenes para comparar")
+    # 2. Guarda la imagen original
+    img_fname = f"{pet_id}.jpg"
+    img_path  = os.path.join(BASE_IMAGES_DIR, img_fname)
+    cv2.imwrite(img_path, img_bgr)
 
-    img2 = cv2.resize(img2, (img1.shape[1], img1.shape[0]))
-    orb = cv2.ORB_create()
-    kp1, des1 = orb.detectAndCompute(img1, None)
-    kp2, des2 = orb.detectAndCompute(img2, None)
-    if des1 is None or des2 is None:
-        raise ValueError("No se detectaron descriptores")
+    # 3. Extrae y guarda descriptores ORB
+    _, desc = preprocess_orb_bgr(img_bgr)
+    if desc is None:
+        raise HTTPException(422, "No se detectaron descriptores")
+    desc_path = os.path.join(DESCRIPTORS_DIR, f"{pet_id}.descs.npy")
+    np.save(desc_path, desc)
 
-    bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-    matches = sorted(bf.match(des1, des2), key=lambda x: x.distance)
-    good_matches = [m for m in matches if m.distance < 70]
+    # 4. Actualiza memoria
+    base_descriptors[img_fname] = desc
 
-    similitud = len(good_matches) / len(matches) * 100 if matches else 0
+    return {"status": "ok", "pet_id": pet_id}
 
-    nombre_archivo = "orb_matches.png"
-    output_path = os.path.join(output_folder, nombre_archivo)
-    img_matches = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None, flags=2)
-    img_matches_rgb = cv2.cvtColor(img_matches, cv2.COLOR_BGR2RGB)
-    Image.fromarray(img_matches_rgb).save(output_path)
+# --- ENDPOINT: BÚSQUEDA DE COINCIDENCIA ---
+@app.post("/search_nose")
+async def search_nose(file: UploadFile = File(...)):
+    # 1. Carga la imagen de consulta
+    data = await file.read()
+    npimg = np.frombuffer(data, np.uint8)
+    img_q_bgr = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+    if img_q_bgr is None:
+        raise HTTPException(400, "Imagen inválida")
 
-    # Construir URL pública
-    url_publica = f"https://ecofloat.space/imagenes/{nombre_archivo}"
-    return similitud, url_publica
+    # 2. Extrae ORB de consulta
+    kp_q, desc_q = preprocess_orb_bgr(img_q_bgr)
+    if desc_q is None:
+        return JSONResponse({"error": "No se detectaron descriptores"}, status_code=422)
+
+    # 3. Compara contra base en memoria
+    best_score = 0.0
+    best_name  = None
+    best_desc  = None
+
+    for name, desc_base in base_descriptors.items():
+        score = compare_descs(desc_q, desc_base)
+        if score > best_score:
+            best_score = score
+            best_name  = name
+            best_desc  = desc_base
+
+    if best_name is None:
+        return {"match": None, "score": 0.0}
+
+    # 4. Dibuja matches
+    base_path = os.path.join(BASE_IMAGES_DIR, best_name)
+    base_bgr  = cv2.imread(base_path)
+    kp_b, _   = preprocess_orb_bgr(base_bgr)
+
+    matches = bf.match(desc_q, best_desc)
+    matches = sorted(matches, key=lambda m: m.distance)
+    good    = [m for m in matches if m.distance < DISTANCE_THRESHOLD]
+
+    draw = cv2.drawMatches(img_q_bgr, kp_q, base_bgr, kp_b, good, None, flags=2)
+    out_fname = f"match_{best_name}"
+    out_path  = os.path.join(OUTPUT_MATCHES_DIR, out_fname)
+    cv2.imwrite(out_path, draw)
+
+    return {
+        "match":       best_name,
+        "score":       round(best_score, 2),
+        "match_image": f"{STATIC_URL_PREFIX}/{out_fname}"
+    }
