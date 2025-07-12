@@ -37,63 +37,67 @@
         <ion-input [(ngModel)]="mdl_edad" label="Edad (años)" type="number" labelPlacement="floating"></ion-input>
       </ion-item>
 
-    <ion-item>
-  <label class="fecha-nacimiento-label">Fecha de Nacimiento</label>
-  <input class="fecha-nacimiento-input" [value]="fechaNacimientoFormateada" readonly (click)="abrirCalendario()">
-</ion-item>
+      <ion-item>
+        <label class="fecha-nacimiento-label">Fecha de Nacimiento</label>
+        <input class="fecha-nacimiento-input" [value]="fechaNacimientoFormateada" readonly (click)="abrirCalendario()" />
+      </ion-item>
 
-
-<ion-modal #modalFecha cssClass="modal-fecha" showBackdrop="true" backdropDismiss="true">
-  <ng-template>
-    <ion-datetime 
-      presentation="date"
-      (ionChange)="onFechaSeleccionada($event)">
-    </ion-datetime>
-  </ng-template>
-</ion-modal>
-
+      <ion-modal #modalFecha cssClass="modal-fecha" showBackdrop="true" backdropDismiss="true">
+        <ng-template>
+          <ion-datetime presentation="date" (ionChange)="onFechaSeleccionada($event)"></ion-datetime>
+        </ng-template>
+      </ion-modal>
 
       <ion-item lines="none">
         <ion-label>¿Mascota fallecida?</ion-label>
         <ion-toggle slot="end" [(ngModel)]="mdl_muerta"></ion-toggle>
       </ion-item>
 
-      <!-- Foto de perfil -->
+      <!-- Foto perfil -->
       <ion-item>
         <ion-label>Foto de Perfil</ion-label>
         <input type="file" name="file_profile" (change)="onSelectProfile($event)" accept="image/*" />
       </ion-item>
+      <div *ngIf="imagenURLProfile" style="margin: 8px 0;">
+        <img [src]="imagenURLProfile" style="width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px;" />
+      </div>
 
-      <!-- Fotos de nariz con etiquetas -->
+      <!-- Foto nariz frontal -->
       <ion-item>
         <ion-label>Foto Nariz Frontal</ion-label>
-        <input type="file" name="file1" (change)="onSelectNose($event,1)" accept="image/*" />
+        <input type="file" name="file1" (change)="onSelectNose($event, 1)" accept="image/*" />
       </ion-item>
+      <div *ngIf="imagenURL1" style="margin: 8px 0;">
+        <img [src]="imagenURL1" style="width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px;" />
+      </div>
 
+      <!-- Foto nariz lateral derecho -->
       <ion-item>
         <ion-label>Foto Nariz Lateral Derecho</ion-label>
-        <input type="file" name="file2" (change)="onSelectNose($event,2)" accept="image/*" />
+        <input type="file" name="file2" (change)="onSelectNose($event, 2)" accept="image/*" />
       </ion-item>
+      <div *ngIf="imagenURL2" style="margin: 8px 0;">
+        <img [src]="imagenURL2" style="width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px;" />
+      </div>
 
+      <!-- Foto nariz lateral izquierdo -->
       <ion-item>
         <ion-label>Foto Nariz Lateral Izquierdo</ion-label>
-        <input type="file" name="file3" (change)="onSelectNose($event,3)" accept="image/*" />
+        <input type="file" name="file3" (change)="onSelectNose($event, 3)" accept="image/*" />
       </ion-item>
+      <div *ngIf="imagenURL3" style="margin: 8px 0;">
+        <img [src]="imagenURL3" style="width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px;" />
+      </div>
 
       <ion-button expand="block" class="clrPrincipal boton-guardar" (click)="guardarMascota()">
         <ion-icon slot="start" name="save"></ion-icon>
         Guardar Mascota
       </ion-button>
 
+      <ion-button class="back-button" shape="round">
+        <ion-icon slot="icon-only" name="arrow-back" size="large"></ion-icon>
+      </ion-button>
 
-
-
-
-  <ion-button class="back-button" shape="round">
-    <ion-icon slot="icon-only" name="arrow-back" size="large"></ion-icon>
-  </ion-button>
-
-
-</ion-card-content>
-</ion-card>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

@@ -21,6 +21,11 @@ export class AnadirPage implements OnInit {
   mdl_fnac = '';
   fechaNacimientoFormateada = '';
   mdl_muerta = 0;
+imagenURLProfile: string | null = null;
+imagenURL1: string | null = null;
+imagenURL2: string | null = null;
+imagenURL3: string | null = null;
+
 
   // Para foto de perfil y nariz
   fileProfile: File | null = null;
@@ -47,16 +52,29 @@ export class AnadirPage implements OnInit {
     }
   }
 
-  // Selección de la foto de perfil
-  onSelectProfile(event: any) {
-    this.fileProfile = event.target.files[0] || null;
+// Para la foto de perfil
+onSelectProfile(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.fileProfile = file;
+    if (this.imagenURLProfile) {
+      URL.revokeObjectURL(this.imagenURLProfile);
+    }
+    this.imagenURLProfile = URL.createObjectURL(file);
   }
+}
 
-  // Selección de cada foto de nariz
-  onSelectNose(event: any, index: number) {
-    const file = event.target.files[0] || null;
-    if (file) (this as any)[`file${index}`] = file;
+onSelectNose(event: any, index: number) {
+  const file = event.target.files[0];
+  if (file) {
+    (this as any)[`file${index}`] = file;
+    const oldUrl = (this as any)[`imagenURL${index}`];
+    if (oldUrl) {
+      URL.revokeObjectURL(oldUrl);
+    }
+    (this as any)[`imagenURL${index}`] = URL.createObjectURL(file);
   }
+}
 
   abrirCalendario() {
     this.modalFecha?.present();
